@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Auth Test</title>
+</head>
+<body>
+    <h1>Testing Firebase Anonymous Auth...</h1>
+    <p>Check the console (F12) for messages.</p>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        console.log("Script started.");
+
+        try {
+            // Ваша конфигурация Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyAJfeYJ8WcNQRWvuqHQ_aA4VC4n-BH6c",
+                authDomain: "kokoro-36157.firebaseapp.com",
+                projectId: "kokoro-36157",
+                storageBucket: "kokoro-36157.appspot.com",
+                messagingSenderId: "334403348528",
+                appId: "1:334403348528:web:548253f8a6ae00060f0b69",
+                measurementId: "G-FHP6L5Q28S"
+            };
+
+            console.log("Initializing Firebase...");
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            console.log("Firebase initialized. Attempting anonymous sign-in...");
+
+            signInAnonymously(auth)
+                .then((userCredential) => {
+                    console.log("%cSUCCESS! Signed in anonymously.", "color: green; font-weight: bold;");
+                    console.log("User UID:", userCredential.user.uid);
+                    document.body.innerHTML += '<h2 style="color: green;">SUCCESS! Signed in anonymously. Check console.</h2>';
+                })
+                .catch((error) => {
+                    console.error("%cFAILED to sign in anonymously.", "color: red; font-weight: bold;");
+                    console.error("Error Code:", error.code);
+                    console.error("Error Message:", error.message);
+                    document.body.innerHTML += `<h2 style="color: red;">FAILED! Error: ${error.message}</h2>`;
+                });
+
+        } catch (error) {
+            console.error("A critical error occurred during setup:", error);
+            document.body.innerHTML += `<h2 style="color: red;">CRITICAL ERROR: ${error.message}</h2>`;
+        }
+    </script>
+</body>
+</html>
