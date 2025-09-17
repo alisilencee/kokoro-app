@@ -239,17 +239,19 @@
         
         window.onload = async () => {
             try {
-                // --- ВАЖНО: Вставьте сюда вашу конфигурацию Firebase ---
-                const firebaseConfig = {
-                    apiKey: "AIzaSyAJfeYJ8WcNQRWvuqHQ_aA4VC4n-BH6c",
-                    authDomain: "kokoro-36157.firebaseapp.com",
-                    projectId: "kokoro-36157",
-                    storageBucket: "kokoro-36157.appspot.com",
-                    messagingSenderId: "334403348528",
-                    appId: "1:334403348528:web:548253f8a6ae00060f0b69",
-                    measurementId: "G-FHP6L5Q28S"
-                };
-                // ----------------------------------------------------
+                // --- ВАЖНО: ЗАМЕНИТЕ ЭТО ВАШЕЙ РЕАЛЬНОЙ КОНФИГУРАЦИЕЙ FIREBASE ---
+                // Скопируйте объект firebaseConfig из настроек вашего проекта
+                // Firebase Console -> Project Settings -> General -> Your apps -> SDK setup and configuration
+               const firebaseConfig = {
+  apiKey: "AIzaSyA6HYj1VNcNEVBVuqAHjLQ_s4YC4n-BHdc",
+  authDomain: "kokoro-36157.firebaseapp.com",
+  projectId: "kokoro-36157",
+  storageBucket: "kokoro-36157.firebasestorage.app",
+  messagingSenderId: "334403548528",
+  appId: "1:334403548528:web:5d4255e4f101deafe00bb5",
+  measurementId: "G-M4HM5CSQ81"
+};
+                // -----------------------------------------------------------------
                 
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
@@ -262,7 +264,10 @@
                     if (user) {
                         checkTelegramAuth();
                     } else {
-                        signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
+                        signInAnonymously(auth).catch(error => {
+                            console.error("Anonymous sign-in failed:", error);
+                            loadingContainer.innerHTML = `Ошибка входа. Проверьте ваш API ключ. <br>Детали: ${error.message}`;
+                        });
                     }
                 });
             } catch (error) {
@@ -461,3 +466,4 @@
     </script>
 </body>
 </html>
+
