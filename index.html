@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Love App</title>
+  <title>Kokoro — пространство для двоих</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       overscroll-behavior-y: none;
-      background-color: #0a0a0a;
+      background: linear-gradient(to bottom right, #fde2e4, #e0f7f1, #e6e6fa);
       font-family: 'Inter', sans-serif;
     }
     .page { display: none; }
@@ -29,86 +29,92 @@
     }
   </style>
 </head>
-<body class="text-gray-100">
+<body class="text-gray-800">
   <!-- Главный контейнер -->
-  <div id="app" class="min-h-screen flex flex-col bg-black">
+  <div id="app" class="min-h-screen flex flex-col">
     <!-- Уведомления -->
     <div id="notification" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 
-         bg-gray-800 text-white px-4 py-2 rounded-xl shadow-lg z-50 opacity-0 
+         text-white px-4 py-2 rounded-xl shadow-lg z-50 opacity-0 
          transition-all duration-500"></div>
 
     <!-- Страницы -->
     <div id="pages" class="flex-grow"></div>
 
     <!-- Навигация -->
-    <nav id="nav" class="bg-gray-900 p-4 flex justify-around border-t border-gray-800"></nav>
+    <nav id="nav" class="bg-white/60 backdrop-blur-md p-4 flex justify-around border-t border-gray-200"></nav>
   </div>
 
   <script>
     // ===== Конфиг страниц =====
     const pagesConfig = [
       {
-        id: "home",
-        title: "❤️ Добро пожаловать!",
+        id: "login",
+        title: "💞 Kokoro",
         color: "text-pink-500",
-        extraClass: "text-3xl mb-6 animate-breathing",
+        extraClass: "text-4xl mb-6 animate-breathing",
         content: `
-          <button id="btnLogin" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-xl shadow-lg">
-            Войти через Telegram
-          </button>
+          <div class="text-center space-y-6">
+            <p class="text-gray-600">Пространство для двоих</p>
+            <script async src="https://telegram.org/js/telegram-widget.js?22"
+              data-telegram-login="KokoroBot"
+              data-size="large"
+              data-onauth="onTelegramAuth(user)"
+              data-request-access="write">
+            </script>
+          </div>
         `,
-        icon: "🏠"
+        icon: "💞"
+      },
+      {
+        id: "home",
+        title: "🏡 Главная",
+        color: "text-blue-500",
+        content: `
+          <p class="text-gray-600">Добро пожаловать в Kokoro! 💖</p>
+        `,
+        icon: "🏡"
       },
       {
         id: "calendar",
-        title: "📅 Наш календарь",
-        color: "text-blue-400",
+        title: "📅 Календарь",
+        color: "text-purple-500",
         content: `
-          <div class="bg-gray-900 p-4 rounded-xl shadow-lg">
-            <p class="text-gray-400">Скоро здесь появятся даты ваших событий!</p>
+          <div class="bg-white p-4 rounded-xl shadow-md">
+            <p class="text-gray-600">Здесь будут даты и напоминания ✨</p>
           </div>
         `,
         icon: "📅"
       },
       {
-        id: "games",
-        title: "🎮 Игры для двоих",
-        color: "text-green-400",
+        id: "chat",
+        title: "💬 Чат",
+        color: "text-green-500",
         content: `
-          <div class="grid grid-cols-1 gap-4">
-            <button data-game="photo-association" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-4 rounded-xl shadow-md">
-              📸 Ассоциация с фото
-            </button>
-            <button data-game="photo-numbers" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-4 rounded-xl shadow-md">
-              🔢 Фото-цифры
-            </button>
-            <button data-game="truth-or-dare" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-4 rounded-xl shadow-md">
-              🎲 Правда или действие
-            </button>
+          <div class="bg-white p-4 rounded-xl shadow-md flex flex-col h-80">
+            <div id="chat-messages" class="flex-grow overflow-y-auto space-y-2 text-gray-700">
+              <p class="text-gray-400 text-sm">Ваш чат пока пуст...</p>
+            </div>
+            <div class="flex mt-2">
+              <input type="text" id="chat-input" placeholder="Напишите сообщение..." 
+                     class="flex-grow p-2 border rounded-l-lg"/>
+              <button id="chat-send" class="bg-pink-400 px-4 rounded-r-lg text-white">➤</button>
+            </div>
           </div>
         `,
-        icon: "🎮"
+        icon: "💬"
       },
       {
-        id: "profile",
-        title: "👤 Профиль",
-        color: "text-purple-400",
+        id: "diary",
+        title: "📖 Дневник эмоций",
+        color: "text-pink-400",
         content: `
-          <div class="bg-gray-900 p-4 rounded-xl shadow-lg space-y-4">
-            <div id="partner-info" class="text-gray-400">
-              <p>Ваш партнёр: <span id="partner-name">не найден</span></p>
-            </div>
-            <div id="invite-view" class="space-y-2">
-              <h2 class="text-2xl font-bold text-gray-400">Партнёр не найден</h2>
-              <input type="text" id="partner-id-input" placeholder="Введите ID партнёра" 
-                     class="w-full p-2 rounded-lg bg-gray-800 text-white" autocomplete="off"/>
-              <button id="btnInvite" class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-xl w-full">
-                Отправить приглашение
-              </button>
-            </div>
+          <div class="bg-white p-4 rounded-xl shadow-md space-y-3">
+            <textarea id="mood-input" rows="3" placeholder="Поделитесь своим настроением..." 
+              class="w-full p-2 border rounded-lg"></textarea>
+            <button id="mood-save" class="bg-pink-400 text-white px-4 py-2 rounded-lg">Сохранить</button>
           </div>
         `,
-        icon: "👤"
+        icon: "📖"
       }
     ];
 
@@ -129,24 +135,22 @@
       `;
       pagesContainer.appendChild(div);
 
-      // кнопки навигации
-      const btn = document.createElement("button");
-      btn.dataset.page = page.id;
-      btn.className = "text-gray-400 hover:text-white";
-      btn.textContent = page.icon;
-      navContainer.appendChild(btn);
+      if (page.icon) {
+        const btn = document.createElement("button");
+        btn.dataset.page = page.id;
+        btn.className = "text-gray-500 hover:text-pink-500 transition";
+        btn.textContent = page.icon;
+        navContainer.appendChild(btn);
+      }
     });
 
     // ===== Навигация =====
-    const pages = document.querySelectorAll(".page");
-    const navButtons = document.querySelectorAll("nav button");
-
     function navigate(pageId) {
-      pages.forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById("page-" + pageId).classList.add("active");
     }
 
-    navButtons.forEach(btn => {
+    document.querySelectorAll("nav button").forEach(btn => {
       btn.addEventListener("click", () => {
         navigate(btn.dataset.page);
       });
@@ -155,50 +159,50 @@
     // ===== Уведомления =====
     function showNotification(message, type = "info") {
       const notification = document.getElementById("notification");
+      notification.className = "fixed top-4 left-1/2 transform -translate-x-1/2 
+        text-white px-4 py-2 rounded-xl shadow-lg z-50 transition-all duration-500";
       notification.textContent = message;
+      if (type === "error") {
+        notification.classList.add("bg-red-500");
+      } else {
+        notification.classList.add("bg-pink-400");
+      }
       notification.classList.remove("hidden", "opacity-0");
       notification.classList.add("opacity-100");
-      if (type === "error") {
-        notification.classList.add("bg-red-600");
-      } else {
-        notification.classList.add("bg-gray-800");
-      }
       setTimeout(() => {
         notification.classList.add("opacity-0");
         setTimeout(() => notification.classList.add("hidden"), 500);
       }, 2000);
     }
 
-    // ===== App =====
-    const app = {
-      loginWithTelegram() {
-        showNotification("Логин через Telegram (заглушка)");
-      },
-      invitePartner(id) {
-        if (!id.trim()) {
-          showNotification("Введите ID партнёра", "error");
-          return;
-        }
-        showNotification(`Приглашение отправлено (${id})`);
-      },
-      playGame(name) {
-        showNotification(`Запуск игры: ${name}`);
-      }
-    };
+    // ===== Telegram Login Callback =====
+    function onTelegramAuth(user) {
+      showNotification(`Привет, ${user.first_name}! Добро пожаловать в Kokoro 💖`);
+      navigate("home");
+    }
 
-    // ===== События =====
+    // ===== Логика чата =====
     document.addEventListener("click", e => {
-      if (e.target.id === "btnLogin") app.loginWithTelegram();
-      if (e.target.id === "btnInvite") {
-        const id = document.getElementById("partner-id-input").value;
-        app.invitePartner(id);
+      if (e.target.id === "chat-send") {
+        const input = document.getElementById("chat-input");
+        if (input.value.trim()) {
+          const msg = document.createElement("div");
+          msg.className = "bg-pink-100 p-2 rounded-lg text-sm self-end";
+          msg.textContent = input.value;
+          document.getElementById("chat-messages").appendChild(msg);
+          input.value = "";
+        }
       }
-      if (e.target.dataset.game) {
-        app.playGame(e.target.dataset.game);
+      if (e.target.id === "mood-save") {
+        const mood = document.getElementById("mood-input").value.trim();
+        if (mood) {
+          showNotification("Эмоция сохранена 💖");
+          document.getElementById("mood-input").value = "";
+        } else {
+          showNotification("Введите текст эмоции", "error");
+        }
       }
     });
   </script>
 </body>
 </html>
-
-
