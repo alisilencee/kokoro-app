@@ -240,16 +240,14 @@
         window.onload = async () => {
             try {
                 // --- ВАЖНО: Вставьте сюда вашу конфигурацию Firebase ---
-                // Замените этот объект на тот, что вы скопировали из консоли Firebase
                const firebaseConfig = {
-    apiKey: "AIzaSyA6HYj1VNcNEVBVuqAHjLQ_s4YC4n-BHdc",
-    authDomain: "kokoro-36157.firebaseapp.com",
-    projectId: "kokoro-36157",
-    storageBucket: "kokoro-36157.firebasestorage.app",
-    messagingSenderId: "334403548528",
-    appId: "1:334403548528:web:5d4255e4f101deafe00bb5",
-    measurementId: "G-M4HM5CSQ81"
-  };
+  apiKey: "AIzaSyA6HYj1VNcNEVBVuqAHjLQ_s4YC4n-BHdc",
+  authDomain: "kokoro-36157.firebaseapp.com",
+  projectId: "kokoro-36157",
+  storageBucket: "kokoro-36157.firebasestorage.app",
+  messagingSenderId: "334403548528",
+  appId: "1:334403548528:web:5d4255e4f101deafe00bb5",
+  measurementId: "G-M4HM5CSQ81"
                 // ----------------------------------------------------
                 
                 const app = initializeApp(firebaseConfig);
@@ -342,10 +340,16 @@
         window.connectPartner = async function() {
             const partnerIdInput = document.getElementById('partner-id-input');
             const partnerId = partnerIdInput.value.trim();
-            if (!partnerId || partnerId === userId) { alert("Введите корректный ID партнёра."); return; }
+            if (!partnerId || partnerId === userId) { 
+                window.Telegram.WebApp.showAlert("Введите корректный ID партнёра.");
+                return;
+            }
             const partnerRef = doc(db, "users", partnerId);
             const partnerSnap = await getDoc(partnerRef);
-            if (!partnerSnap.exists() || partnerSnap.data().partnerId) { alert("Партнёр не найден или уже состоит в паре."); return; }
+            if (!partnerSnap.exists() || partnerSnap.data().partnerId) {
+                window.Telegram.WebApp.showAlert("Партнёр не найден или уже состоит в паре.");
+                return;
+            }
             const coupleId = [userId, partnerId].sort().join('_');
             await updateDoc(doc(db, "users", userId), { partnerId: partnerId, coupleId: coupleId });
             await updateDoc(doc(db, "users", partnerId), { partnerId: userId, coupleId: coupleId });
@@ -355,18 +359,16 @@
         }
 
         window.disconnectPartner = async function() {
-             if (!window.Telegram.WebApp.isVersionAtLeast('6.2') ? !confirm("Вы уверены?") : true) {
-                 window.Telegram.WebApp.showConfirm("Вы уверены, что хотите разорвать связь?", async (ok) => {
-                    if (ok) {
-                        const userSnap = await getDoc(doc(db, "users", userId));
-                        const partnerId = userSnap.data()?.partnerId;
-                        if (partnerId) {
-                            await updateDoc(doc(db, "users", userId), { partnerId: null, coupleId: null });
-                            await updateDoc(doc(db, "users", partnerId), { partnerId: null, coupleId: null });
-                        }
+            window.Telegram.WebApp.showConfirm("Вы уверены, что хотите разорвать связь? Это действие нельзя будет отменить.", async (ok) => {
+                if (ok) {
+                    const userSnap = await getDoc(doc(db, "users", userId));
+                    const partnerId = userSnap.data()?.partnerId;
+                    if (partnerId) {
+                        await updateDoc(doc(db, "users", userId), { partnerId: null, coupleId: null });
+                        await updateDoc(doc(db, "users", partnerId), { partnerId: null, coupleId: null });
                     }
-                 });
-             }
+                }
+            });
         }
 
         const pageTitles = { home: 'Kokoro ❤️', calendar: 'Календарь', chat: 'Чат', games: 'Игры', profile: 'Профиль' };
@@ -458,4 +460,3 @@
     </script>
 </body>
 </html>
-
