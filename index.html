@@ -23,49 +23,26 @@
             --accent-lavender: #e5e7ff;
             --accent-lavender-dark: #818cf8;
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            overscroll-behavior-y: none;
-        }
-
-        @keyframes breathe {
-            0%, 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(129, 140, 248, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 10px 15px rgba(129, 140, 248, 0); }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-main); overscroll-behavior-y: none; }
+        @keyframes breathe { 0%, 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(129, 140, 248, 0.4); } 50% { transform: scale(1.05); box-shadow: 0 0 10px 15px rgba(129, 140, 248, 0); } }
         .breathing-circle { animation: breathe 5s ease-in-out infinite; }
-
         .page { display: none; animation: fadeIn 0.5s ease-in-out; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .modal-backdrop {
-            background-color: rgba(0,0,0,0.5);
-            transition: opacity 0.3s ease-in-out;
-        }
-        .modal-content {
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
+        .modal-backdrop { background-color: rgba(0,0,0,0.5); transition: opacity 0.3s ease-in-out; }
+        .modal-content { transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; }
         .modal-hidden .modal-backdrop { opacity: 0; }
         .modal-hidden .modal-content { transform: translateY(20px); opacity: 0; }
-        
-        button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Экран загрузки -->
+    <!-- Экраны и HTML-структура -->
     <div id="loading-container" class="max-w-sm mx-auto min-h-screen bg-[var(--bg-main)] flex flex-col justify-center items-center p-8">
         <div class="text-2xl font-bold">Kokoro ❤️</div>
         <div class="text-gray-500 mt-2">Загрузка...</div>
     </div>
-
-    <!-- Экран входа через Telegram -->
     <div id="login-container" style="display: none;" class="max-w-sm mx-auto min-h-screen bg-[var(--bg-main)] flex flex-col justify-center p-8">
         <div class="text-center">
             <h1 class="text-3xl font-bold text-[var(--text-main)] tracking-tight">Добро пожаловать в Kokoro ❤️</h1>
@@ -76,138 +53,17 @@
             </button>
         </div>
     </div>
-
-    <!-- Основной контейнер приложения -->
     <div id="app-container" style="display: none;" class="max-w-sm mx-auto min-h-screen bg-[var(--bg-main)] shadow-2xl shadow-purple-200/50 flex flex-col">
         <header class="p-4 text-center sticky top-0 bg-[var(--bg-main)]/80 backdrop-blur-sm z-10">
             <h1 id="header-title" class="text-xl font-bold text-[var(--text-main)] tracking-tight">Kokoro ❤️</h1>
         </header>
-
         <main class="flex-grow p-4 overflow-y-auto">
-            
-            <!-- Экран: Главная -->
-            <div id="page-home" class="page space-y-6">
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold">Для тебя и меня</h2>
-                    <p class="text-md text-[var(--text-secondary)]">Маленькие ритуалы и большие чувства</p>
-                </div>
-
-                <!-- ✨ Gemini: Генератор идей для свидания -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg shadow-yellow-500/10 text-center">
-                    <p class="text-lg font-semibold mb-2">✨ Идея для свидания</p>
-                    <p id="date-idea-content" class="text-sm text-[var(--text-secondary)] mb-4 min-h-[40px] flex items-center justify-center">Нажмите на кнопку, чтобы получить новую идею!</p>
-                    <button id="date-idea-button" onclick="generateDateIdea()" class="bg-yellow-100 text-yellow-800 font-semibold py-2 px-6 rounded-full transition-transform duration-200 active:scale-95">Сгенерировать</button>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-lg shadow-pink-500/10 text-center">
-                    <p class="text-lg font-semibold mb-3">Думаю о тебе</p>
-                    <p class="text-sm text-[var(--text-secondary)] mb-4">Отправь сигнал, что твой партнёр сейчас в мыслях.</p>
-                    <button onclick="sendThinking()" class="bg-[var(--accent-pink)] text-[var(--accent-pink-dark)] w-20 h-20 rounded-full flex items-center justify-center mx-auto transition-transform duration-200 active:scale-90">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                    </button>
-                </div>
-                 <div class="bg-white p-6 rounded-2xl shadow-lg shadow-blue-500/10 text-center">
-                    <p class="text-lg font-semibold mb-3">Дыхание вместе</p>
-                    <p class="text-sm text-[var(--text-secondary)] mb-4">Синхронизируйтесь, чтобы успокоиться и почувствовать единство.</p>
-                    <div class="w-24 h-24 bg-[var(--accent-lavender)] rounded-full mx-auto flex items-center justify-center breathing-circle">
-                        <div class="w-20 h-20 bg-white rounded-full"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Экран: Календарь -->
-            <div id="page-calendar" class="page">
-                 <div class="bg-white p-4 rounded-2xl shadow-lg shadow-purple-500/10">
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="text-[var(--text-secondary)]">◀</button>
-                        <h3 class="font-bold text-lg">Сентябрь 2025</h3>
-                        <button class="text-[var(--text-secondary)]">▶</button>
-                    </div>
-                    <div class="grid grid-cols-7 text-center text-sm gap-2 text-[var(--text-secondary)] mb-2">
-                        <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
-                    </div>
-                    <div class="grid grid-cols-7 text-center gap-2">
-                        <div class="p-2 rounded-full">1</div><div class="p-2 rounded-full">2</div><div class="p-2 rounded-full">3</div><div class="p-2 rounded-full bg-[var(--accent-pink)] text-[var(--accent-pink-dark)] font-bold">4</div><div class="p-2 rounded-full">5</div><div class="p-2 rounded-full">6</div><div class="p-2 rounded-full">7</div><div class="p-2 rounded-full">8</div><div class="p-2 rounded-full">9</div><div class="p-2 rounded-full">10</div><div class="p-2 rounded-full">11</div><div class="p-2 rounded-full">12</div><div class="p-2 rounded-full">13</div><div class="p-2 rounded-full">14</div><div class="p-2 rounded-full">15</div><div class="p-2 rounded-full">16</div><div class="p-2 rounded-full bg-[var(--accent-lavender-dark)] text-white font-bold">17</div><div class="p-2 rounded-full">18</div><div class="p-2 rounded-full">19</div><div class="p-2 rounded-full bg-[var(--accent-blue)] text-[var(--accent-blue-dark)] font-bold">20</div><div class="p-2 rounded-full">21</div><div class="p-2 rounded-full">22</div><div class="p-2 rounded-full">23</div><div class="p-2 rounded-full">24</div><div class="p-2 rounded-full">25</div><div class="p-2 rounded-full">26</div><div class="p-2 rounded-full">27</div><div class="p-2 rounded-full">28</div><div class="p-2 rounded-full">29</div><div class="p-2 rounded-full">30</div>
-                    </div>
-                </div>
-                <div class="mt-6">
-                    <h3 class="font-bold text-lg mb-3">Ближайшие события</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center bg-white p-3 rounded-xl shadow-sm shadow-purple-500/10"><div class="w-1.5 h-10 bg-[var(--accent-pink-dark)] rounded-full mr-3"></div><div><p class="font-semibold">Наша годовщина</p><p class="text-sm text-[var(--text-secondary)]">4 сентября</p></div></div>
-                        <div class="flex items-center bg-white p-3 rounded-xl shadow-sm shadow-purple-500/10"><div class="w-1.5 h-10 bg-[var(--accent-blue-dark)] rounded-full mr-3"></div><div><p class="font-semibold">Поход в кино</p><p class="text-sm text-[var(--text-secondary)]">20 сентября, 19:00</p></div></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Экран: Чат -->
-            <div id="page-chat" class="page flex flex-col h-full">
-                <div class="flex-grow space-y-4 overflow-y-auto pr-2">
-                    <div class="flex justify-start"><div class="bg-gray-200 p-3 rounded-t-xl rounded-br-xl max-w-xs"><p>Привет! Как твой день проходит? 😊</p><p class="text-xs text-right text-gray-500 mt-1">18:20</p></div></div>
-                    <div class="flex justify-end"><div class="bg-[var(--accent-lavender)] text-[var(--text-main)] p-3 rounded-t-xl rounded-bl-xl max-w-xs"><p>Отлично! Только что закончил с работой. Уже скучаю по тебе ❤️</p><p class="text-xs text-right text-gray-600 mt-1">18:21</p></div></div>
-                     <div class="flex justify-start"><div class="bg-gray-200 p-3 rounded-t-xl rounded-br-xl max-w-xs"><p>И я! Может, закажем сегодня пиццу?</p><p class="text-xs text-right text-gray-500 mt-1">18:22</p></div></div>
-                </div>
-                <div class="mt-4 flex items-center space-x-2">
-                    <input type="text" placeholder="Написать сообщение..." class="w-full p-3 rounded-full bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent-lavender-dark)] transition">
-                    <button class="bg-[var(--accent-lavender-dark)] text-white w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
-                </div>
-            </div>
-            
-            <!-- Экран: Игры -->
-            <div id="page-games" class="page">
-                 <div class="space-y-4">
-                    <div class="p-5 rounded-2xl bg-gradient-to-br from-[var(--accent-pink)] to-white shadow-lg shadow-pink-500/20"><h3 class="text-xl font-bold text-[var(--accent-pink-dark)] mb-1">Фото-ассоциации</h3><p class="text-sm text-[var(--text-main)]/70 mb-4">Сфотографируй то, что напоминает тебе о партнёре.</p><button class="bg-white text-[var(--accent-pink-dark)] font-semibold py-2 px-5 rounded-full text-sm">Играть</button></div>
-                    <div class="p-5 rounded-2xl bg-gradient-to-br from-[var(--accent-blue)] to-white shadow-lg shadow-blue-500/20"><h3 class="text-xl font-bold text-[var(--accent-blue-dark)] mb-1">Числовой челлендж</h3><p class="text-sm text-[var(--text-main)]/70 mb-4">Ищите вместе числа от 1 до 100 в окружающем мире.</p><button class="bg-white text-[var(--accent-blue-dark)] font-semibold py-2 px-5 rounded-full text-sm">Играть</button></div>
-                    
-                    <!-- ✨ Gemini: Правда или Действие -->
-                    <div class="p-5 rounded-2xl bg-gradient-to-br from-[var(--accent-lavender)] to-white shadow-lg shadow-purple-500/20">
-                        <h3 class="text-xl font-bold text-[var(--accent-lavender-dark)] mb-1">✨ Правда или Действие</h3>
-                        <div id="truth-dare-content" class="text-sm text-[var(--text-main)]/80 my-4 min-h-[60px] flex items-center justify-center text-center">Нажмите, чтобы сгенерировать вопрос или задание.</div>
-                        <div class="flex space-x-2">
-                           <button id="truth-btn" onclick="generateTruthOrDare('truth')" class="flex-1 bg-white text-[var(--accent-lavender-dark)] font-semibold py-2 px-5 rounded-full text-sm">Правда</button>
-                           <button id="dare-btn" onclick="generateTruthOrDare('dare')" class="flex-1 bg-white text-[var(--accent-lavender-dark)] font-semibold py-2 px-5 rounded-full text-sm">Действие</button>
-                        </div>
-                    </div>
-                </div>
-                 <div class="mt-8">
-                    <h3 class="font-bold text-lg mb-3 text-center">Ваши ачивки</h3>
-                     <div class="grid grid-cols-4 gap-4 text-center">
-                        <div class="bg-white p-3 rounded-2xl shadow-sm"><p class="text-3xl">💕</p><p class="text-xs mt-1">100 дней</p></div>
-                        <div class="bg-white p-3 rounded-2xl shadow-sm"><p class="text-3xl">💌</p><p class="text-xs mt-1">10 писем</p></div>
-                        <div class="bg-white p-3 rounded-2xl shadow-sm"><p class="text-3xl">📸</p><p class="text-xs mt-1">1-я игра</p></div>
-                        <div class="bg-gray-100 p-3 rounded-2xl"><p class="text-3xl opacity-30">🗓️</p><p class="text-xs mt-1 opacity-30">Год вместе</p></div>
-                     </div>
-                </div>
-            </div>
-
-            <!-- Экран: Профиль -->
-            <div id="page-profile" class="page">
-                <div class="text-center">
-                    <img id="profile-avatar" src="https://placehold.co/128x128/e5e7ff/818cf8?text=You" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg">
-                    <h2 id="profile-nickname" class="text-2xl font-bold">Ваш ник</h2>
-                    <p class="text-md text-[var(--text-secondary)]">Это вы</p>
-                </div>
-                <hr class="my-8 border-t border-gray-200">
-                <div id="partner-view" class="text-center" style="display: none;">
-                    <img id="partner-avatar" src="https://placehold.co/128x128/fce7f3/ec4899?text=?" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg">
-                    <h2 id="partner-nickname" class="text-2xl font-bold">Партнёр</h2>
-                     <button onclick="disconnectPartner()" class="mt-4 bg-red-100 text-red-600 font-semibold py-2 px-6 rounded-full text-sm">Разорвать связь</button>
-                </div>
-                <div id="invite-view" class="text-center">
-                    <img src="https://placehold.co/128x128/fce7f3/ec4899?text=?" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg opacity-70">
-                    <h2 class="text-2xl font-bold text-gray-400">Партнёр не найден</h2>
-                    <p class="text-sm text-gray-500 mt-2 mb-4">Создайте пару, чтобы использовать совместные функции.</p>
-                     <div class="flex space-x-2">
-                        <button onclick="showInviteModal()" class="flex-1 bg-[var(--accent-pink)] text-[var(--accent-pink-dark)] font-semibold py-3 px-4 rounded-full">Пригласить</button>
-                        <button onclick="showConnectModal()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-3 px-4 rounded-full">Подключиться</button>
-                    </div>
-                </div>
-                <hr class="my-8 border-t border-gray-200">
-                <div class="text-center">
-                    <button onclick="logout()" class="text-red-500 font-semibold">Выйти из аккаунта</button>
-                </div>
-            </div>
+            <div id="page-home" class="page space-y-6"></div>
+            <div id="page-calendar" class="page"></div>
+            <div id="page-chat" class="page flex flex-col h-full"></div>
+            <div id="page-games" class="page"></div>
+            <div id="page-profile" class="page"></div>
         </main>
-
         <nav class="sticky bottom-0 bg-white/70 backdrop-blur-sm p-2 rounded-t-2xl shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)]">
             <div class="flex justify-around">
                 <button onclick="navigate('home')" class="nav-item active flex-1 flex flex-col items-center p-2 rounded-lg text-[var(--accent-lavender-dark)]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span class="text-xs mt-1">Главная</span></button>
@@ -218,28 +74,89 @@
             </div>
         </nav>
     </div>
-
-    <!-- Модальные окна -->
-    <div id="invite-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-hidden" onclick="closeAllModals()"><div class="modal-backdrop fixed inset-0"></div><div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center" onclick="event.stopPropagation()"><h3 class="text-lg font-bold mb-2">Пригласите партнёра</h3><p class="text-sm text-gray-600 mb-4">Отправьте этот ID вашему партнёру. Он должен будет ввести его, чтобы подключиться к вам.</p><div class="bg-gray-100 p-3 rounded-lg font-mono text-lg mb-4 break-all" id="user-id-display"></div><button onclick="copyUserId()" class="w-full bg-[var(--accent-lavender-dark)] text-white font-semibold py-3 rounded-full">Копировать ID</button></div></div>
-    <div id="connect-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-hidden" onclick="closeAllModals()"><div class="modal-backdrop fixed inset-0"></div><div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center" onclick="event.stopPropagation()"><h3 class="text-lg font-bold mb-2">Подключиться к партнёру</h3><p class="text-sm text-gray-600 mb-4">Введите ID вашего партнёра, чтобы создать пару.</p><input id="partner-id-input" type="text" placeholder="ID партнёра" class="w-full text-center p-3 rounded-lg bg-gray-100 border focus:ring-2 focus:ring-[var(--accent-lavender-dark)] focus:outline-none mb-4"><button onclick="connectPartner()" class="w-full bg-[var(--accent-lavender-dark)] text-white font-semibold py-3 rounded-full">Подключиться</button></div></div>
-    
-    <!-- Уведомление -->
+    <div id="invite-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-hidden" onclick="closeAllModals()"><div class="modal-backdrop fixed inset-0"></div><div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center" onclick="event.stopPropagation()"><h3 class="text-lg font-bold mb-2">Пригласите партнёра</h3><p class="text-sm text-gray-600 mb-4">Отправьте этот ID вашему партнёру.</p><div class="bg-gray-100 p-3 rounded-lg font-mono text-lg mb-4 break-all" id="user-id-display"></div><button onclick="copyUserId()" class="w-full bg-[var(--accent-lavender-dark)] text-white font-semibold py-3 rounded-full">Копировать ID</button></div></div>
+    <div id="connect-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-hidden" onclick="closeAllModals()"><div class="modal-backdrop fixed inset-0"></div><div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center" onclick="event.stopPropagation()"><h3 class="text-lg font-bold mb-2">Подключиться к партнёру</h3><p class="text-sm text-gray-600 mb-4">Введите ID вашего партнёра.</p><input id="partner-id-input" type="text" placeholder="ID партнёра" class="w-full text-center p-3 rounded-lg bg-gray-100 border focus:ring-2 focus:ring-[var(--accent-lavender-dark)] focus:outline-none mb-4"><button onclick="connectPartner()" class="w-full bg-[var(--accent-lavender-dark)] text-white font-semibold py-3 rounded-full">Подключиться</button></div></div>
     <div id="notification" class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-white py-2 px-5 rounded-full text-sm shadow-lg opacity-0 pointer-events-none translate-y-[-20px] transition-all duration-500 z-50"></div>
 
-    <!-- Скрипты -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { initializeApp } from "https://www.static.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        let db, auth, tgUser, userId;
+        // --- Глобальные переменные ---
+        let db, auth, tgUser, userId, unsubscribeUser;
         const loadingContainer = document.getElementById('loading-container');
         const loginContainer = document.getElementById('login-container');
         const appContainer = document.getElementById('app-container');
+
+        // --- Шаблоны для страниц (для чистоты кода) ---
+        const pageTemplates = {
+            home: `
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold">Для тебя и меня</h2>
+                    <p class="text-md text-[var(--text-secondary)]">Маленькие ритуалы и большие чувства</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg shadow-yellow-500/10 text-center">
+                    <p class="text-lg font-semibold mb-2">✨ Идея для свидания</p>
+                    <p id="date-idea-content" class="text-sm text-[var(--text-secondary)] mb-4 min-h-[40px] flex items-center justify-center">Нажмите на кнопку, чтобы получить новую идею!</p>
+                    <button id="date-idea-button" onclick="window.app.generateDateIdea()" class="bg-yellow-100 text-yellow-800 font-semibold py-2 px-6 rounded-full transition-transform duration-200 active:scale-95">Сгенерировать</button>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg shadow-pink-500/10 text-center">
+                    <p class="text-lg font-semibold mb-3">Думаю о тебе</p>
+                    <p class="text-sm text-[var(--text-secondary)] mb-4">Отправь сигнал, что твой партнёр сейчас в мыслях.</p>
+                    <button onclick="window.app.sendThinking()" class="bg-[var(--accent-pink)] text-[var(--accent-pink-dark)] w-20 h-20 rounded-full flex items-center justify-center mx-auto transition-transform duration-200 active:scale-90">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                    </button>
+                </div>`,
+            games: `
+                <div class="space-y-4">
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-[var(--accent-pink)] to-white shadow-lg shadow-pink-500/20"><h3 class="text-xl font-bold text-[var(--accent-pink-dark)] mb-1">Фото-ассоциации</h3><p class="text-sm text-[var(--text-main)]/70 mb-4">Сфотографируй то, что напоминает тебе о партнёре.</p><button class="bg-white text-[var(--accent-pink-dark)] font-semibold py-2 px-5 rounded-full text-sm">Играть</button></div>
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-[var(--accent-blue)] to-white shadow-lg shadow-blue-500/20"><h3 class="text-xl font-bold text-[var(--accent-blue-dark)] mb-1">Числовой челлендж</h3><p class="text-sm text-[var(--text-main)]/70 mb-4">Ищите вместе числа от 1 до 100 в окружающем мире.</p><button class="bg-white text-[var(--accent-blue-dark)] font-semibold py-2 px-5 rounded-full text-sm">Играть</button></div>
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-[var(--accent-lavender)] to-white shadow-lg shadow-purple-500/20">
+                        <h3 class="text-xl font-bold text-[var(--accent-lavender-dark)] mb-1">✨ Правда или Действие</h3>
+                        <div id="truth-dare-content" class="text-sm text-[var(--text-main)]/80 my-4 min-h-[60px] flex items-center justify-center text-center">Нажмите, чтобы сгенерировать вопрос или задание.</div>
+                        <div class="flex space-x-2">
+                           <button id="truth-btn" onclick="window.app.generateTruthOrDare('truth')" class="flex-1 bg-white text-[var(--accent-lavender-dark)] font-semibold py-2 px-5 rounded-full text-sm">Правда</button>
+                           <button id="dare-btn" onclick="window.app.generateTruthOrDare('dare')" class="flex-1 bg-white text-[var(--accent-lavender-dark)] font-semibold py-2 px-5 rounded-full text-sm">Действие</button>
+                        </div>
+                    </div>
+                </div>`,
+            profile: `
+                <div class="text-center">
+                    <img id="profile-avatar" src="https://placehold.co/128x128/e5e7ff/818cf8?text=You" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg">
+                    <h2 id="profile-nickname" class="text-2xl font-bold">Ваш ник</h2>
+                    <p class="text-md text-[var(--text-secondary)]">Это вы</p>
+                </div>
+                <hr class="my-8 border-t border-gray-200">
+                <div id="partner-view" class="text-center" style="display: none;">
+                    <img id="partner-avatar" src="https://placehold.co/128x128/fce7f3/ec4899?text=?" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg">
+                    <h2 id="partner-nickname" class="text-2xl font-bold">Партнёр</h2>
+                     <button onclick="window.app.disconnectPartner()" class="mt-4 bg-red-100 text-red-600 font-semibold py-2 px-6 rounded-full text-sm">Разорвать связь</button>
+                </div>
+                <div id="invite-view" class="text-center">
+                    <img src="https://placehold.co/128x128/fce7f3/ec4899?text=?" class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg opacity-70">
+                    <h2 class="text-2xl font-bold text-gray-400">Партнёр не найден</h2>
+                    <p class="text-sm text-gray-500 mt-2 mb-4">Создайте пару, чтобы использовать совместные функции.</p>
+                     <div class="flex space-x-2">
+                        <button onclick="window.app.showInviteModal()" class="flex-1 bg-[var(--accent-pink)] text-[var(--accent-pink-dark)] font-semibold py-3 px-4 rounded-full">Пригласить</button>
+                        <button onclick="window.app.showConnectModal()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-3 px-4 rounded-full">Подключиться</button>
+                    </div>
+                </div>
+                <hr class="my-8 border-t border-gray-200">
+                <div class="text-center">
+                    <button onclick="window.app.logout()" class="text-red-500 font-semibold">Выйти из аккаунта</button>
+                </div>`
+        };
+
+        // --- Основной объект приложения ---
+        window.app = {
+            // ... (все функции будут здесь)
+        };
         
+        // --- Инициализация ---
         window.onload = async () => {
             try {
-                // --- ВАЖНО: Вставьте сюда вашу конфигурацию Firebase ---
+                // ВАЖНО: Ваша конфигурация Firebase.
                 const firebaseConfig = {
                     apiKey: "AIzaSyAJfeYJ8WcNQRWvuqHQ_aA4VC4n-BH6c",
                     authDomain: "kokoro-36157.firebaseapp.com",
@@ -249,133 +166,46 @@
                     appId: "1:334403348528:web:548253f8a6ae00060f0b69",
                     measurementId: "G-FHP6L5Q28S"
                 };
-                // ----------------------------------------------------
                 
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                
-                window.Telegram.WebApp.ready();
-                window.Telegram.WebApp.expand();
+                const firebaseApp = initializeApp(firebaseConfig);
+                db = getFirestore(firebaseApp);
+                auth = getAuth(firebaseApp);
+
+                Telegram.WebApp.ready();
+                Telegram.WebApp.expand();
 
                 onAuthStateChanged(auth, user => {
                     if (user) {
-                        checkTelegramAuth();
+                        if (Telegram.WebApp.initDataUnsafe?.user) {
+                            tgUser = Telegram.WebApp.initDataUnsafe.user;
+                            userId = tgUser.id.toString();
+                            app.loginWithTelegram();
+                        } else {
+                            loadingContainer.style.display = 'none';
+                            loginContainer.style.display = 'flex';
+                        }
                     } else {
                         signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
                     }
                 });
             } catch (error) {
                 console.error("Initialization failed:", error);
-                loadingContainer.innerHTML = "Ошибка инициализации. Попробуйте позже.";
+                loadingContainer.innerHTML = "Ошибка инициализации. Проверьте консоль (F12).";
             }
         };
 
-        function checkTelegramAuth() {
-            if (window.Telegram.WebApp.initDataUnsafe?.user) {
-                tgUser = window.Telegram.WebApp.initDataUnsafe.user;
-                userId = tgUser.id.toString();
-                loginWithTelegram();
-            } else {
-                loadingContainer.style.display = 'none';
-                loginContainer.style.display = 'flex';
-            }
-        }
-
-        window.loginWithTelegram = async function() {
-            if (!tgUser) {
-                tgUser = { id: Date.now(), first_name: 'Test', last_name: 'User', username: 'testuser' };
-                userId = tgUser.id.toString();
-            }
-            const userRef = doc(db, "users", userId);
-            const userSnap = await getDoc(userRef);
-            if (!userSnap.exists()) {
-                await setDoc(userRef, { id: userId, firstName: tgUser.first_name, lastName: tgUser.last_name || '', username: tgUser.username || '', partnerId: null, coupleId: null });
-            }
-            startApp();
-        }
-
-        async function startApp() {
-            loginContainer.style.display = 'none';
-            loadingContainer.style.display = 'none';
-            appContainer.style.display = 'flex';
-            onSnapshot(doc(db, "users", userId), (docSnap) => {
-                const userData = docSnap.data();
-                if (userData) {
-                    updateProfileUI(userData);
-                    updatePartnerUI(userData);
-                }
-            });
-            navigate('home');
-        }
-
-        function updateProfileUI(userData) {
-            document.getElementById('profile-nickname').textContent = userData.firstName || userData.username;
-            document.getElementById('profile-avatar').src = `https://placehold.co/128x128/e5e7ff/818cf8?text=${(userData.firstName || 'U').charAt(0)}`;
-            document.getElementById('user-id-display').textContent = userData.id;
-        }
-
-        async function updatePartnerUI(userData) {
-            const inviteView = document.getElementById('invite-view');
-            const partnerView = document.getElementById('partner-view');
-            if (userData.partnerId) {
-                inviteView.style.display = 'none';
-                partnerView.style.display = 'block';
-                const partnerSnap = await getDoc(doc(db, "users", userData.partnerId));
-                if (partnerSnap.exists()) {
-                    const partnerData = partnerSnap.data();
-                    document.getElementById('partner-nickname').textContent = partnerData.firstName || partnerData.username;
-                    document.getElementById('partner-avatar').src = `https://placehold.co/128x128/fce7f3/ec4899?text=${(partnerData.firstName || 'P').charAt(0)}`;
-                }
-            } else {
-                inviteView.style.display = 'block';
-                partnerView.style.display = 'none';
-            }
-        }
-        
-        window.logout = function() {
-            appContainer.style.display = 'none';
-            loginContainer.style.display = 'flex';
-        }
-
-        window.connectPartner = async function() {
-            const partnerIdInput = document.getElementById('partner-id-input');
-            const partnerId = partnerIdInput.value.trim();
-            if (!partnerId || partnerId === userId) { 
-                window.Telegram.WebApp.showAlert("Введите корректный ID партнёра.");
-                return;
-            }
-            const partnerRef = doc(db, "users", partnerId);
-            const partnerSnap = await getDoc(partnerRef);
-            if (!partnerSnap.exists() || partnerSnap.data().partnerId) {
-                window.Telegram.WebApp.showAlert("Партнёр не найден или уже состоит в паре.");
-                return;
-            }
-            const coupleId = [userId, partnerId].sort().join('_');
-            await updateDoc(doc(db, "users", userId), { partnerId: partnerId, coupleId: coupleId });
-            await updateDoc(doc(db, "users", partnerId), { partnerId: userId, coupleId: coupleId });
-            await setDoc(doc(db, "couples", coupleId), { members: [userId, partnerId] });
-            closeAllModals();
-            partnerIdInput.value = '';
-        }
-
-        window.disconnectPartner = async function() {
-            window.Telegram.WebApp.showConfirm("Вы уверены, что хотите разорвать связь? Это действие нельзя будет отменить.", async (ok) => {
-                if (ok) {
-                    const userSnap = await getDoc(doc(db, "users", userId));
-                    const partnerId = userSnap.data()?.partnerId;
-                    if (partnerId) {
-                        await updateDoc(doc(db, "users", userId), { partnerId: null, coupleId: null });
-                        await updateDoc(doc(db, "users", partnerId), { partnerId: null, coupleId: null });
-                    }
-                }
-            });
-        }
-
+        // ... остальной JavaScript ...
+        // (Функции навигации, модальных окон, API и т.д.)
         const pageTitles = { home: 'Kokoro ❤️', calendar: 'Календарь', chat: 'Чат', games: 'Игры', profile: 'Профиль' };
-        window.navigate = function(pageId) {
+
+        function navigate(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${pageId}`).classList.add('active');
+            const pageContainer = document.getElementById(`page-${pageId}`);
+            if (pageTemplates[pageId] && !pageContainer.innerHTML) {
+                pageContainer.innerHTML = pageTemplates[pageId];
+            }
+            pageContainer.classList.add('active');
+
             document.getElementById('header-title').textContent = pageTitles[pageId];
             document.querySelectorAll('.nav-item').forEach(item => {
                 const isActive = item.getAttribute('onclick').includes(`'${pageId}'`);
@@ -384,80 +214,168 @@
                 item.classList.toggle('text-[var(--text-secondary)]', !isActive);
             });
         }
-        
-        window.showInviteModal = () => document.getElementById('invite-modal').classList.remove('modal-hidden');
-        window.showConnectModal = () => document.getElementById('connect-modal').classList.remove('modal-hidden');
-        window.closeAllModals = () => {
-            document.getElementById('invite-modal').classList.add('modal-hidden');
-            document.getElementById('connect-modal').classList.add('modal-hidden');
-        }
-        window.copyUserId = () => {
-            navigator.clipboard.writeText(userId).then(() => window.Telegram.WebApp.showAlert("ID скопирован!"));
-        }
+        window.navigate = navigate; // Сделать доступной глобально
 
-        window.sendThinking = function() {
-            const notification = document.getElementById('notification');
-            notification.textContent = '💖 Отправлено!';
-            notification.classList.remove('opacity-0', 'translate-y-[-20px]');
-            notification.classList.add('opacity-100', 'translate-y-0');
-            setTimeout(() => {
-                notification.classList.remove('opacity-100', 'translate-y-0');
-                notification.classList.add('opacity-0', 'translate-y-[-20px]');
-            }, 2000);
-        }
+        // Функции приложения, вынесенные в объект app
+        Object.assign(window.app, {
+            async loginWithTelegram() {
+                if (!tgUser) {
+                    tgUser = { id: Date.now(), first_name: 'Test', last_name: 'User', username: 'testuser' };
+                    userId = tgUser.id.toString();
+                }
+                const userRef = doc(db, "users", userId);
+                const userSnap = await getDoc(userRef);
+                if (!userSnap.exists()) {
+                    await setDoc(userRef, { id: userId, firstName: tgUser.first_name, lastName: tgUser.last_name || '', username: tgUser.username || '', partnerId: null, coupleId: null });
+                }
+                this.startApp();
+            },
 
-        // --- GEMINI API ---
-        async function callGemini(prompt, retries = 3, delay = 1000) {
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            const payload = { contents: [{ parts: [{ text: prompt }] }] };
-            try {
-                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                if (!response.ok) {
-                    if (response.status === 429 && retries > 0) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        return callGemini(prompt, retries - 1, delay * 2);
+            startApp() {
+                loginContainer.style.display = 'none';
+                loadingContainer.style.display = 'none';
+                appContainer.style.display = 'flex';
+                if (unsubscribeUser) unsubscribeUser();
+                unsubscribeUser = onSnapshot(doc(db, "users", userId), (docSnap) => {
+                    const userData = docSnap.data();
+                    if (userData) {
+                        this.updateProfileUI(userData);
+                        this.updatePartnerUI(userData);
                     }
-                    throw new Error(`API call failed with status: ${response.status}`);
+                });
+                navigate('home');
+            },
+
+            updateProfileUI(userData) {
+                const nicknameEl = document.getElementById('profile-nickname');
+                const avatarEl = document.getElementById('profile-avatar');
+                const userIdEl = document.getElementById('user-id-display');
+                if (nicknameEl) nicknameEl.textContent = userData.firstName || userData.username;
+                if (avatarEl) avatarEl.src = `https://placehold.co/128x128/e5e7ff/818cf8?text=${(userData.firstName || 'U').charAt(0)}`;
+                if (userIdEl) userIdEl.textContent = userData.id;
+            },
+
+            async updatePartnerUI(userData) {
+                const inviteView = document.getElementById('invite-view');
+                const partnerView = document.getElementById('partner-view');
+                if (!inviteView || !partnerView) return;
+
+                if (userData.partnerId) {
+                    inviteView.style.display = 'none';
+                    partnerView.style.display = 'block';
+                    const partnerSnap = await getDoc(doc(db, "users", userData.partnerId));
+                    if (partnerSnap.exists()) {
+                        const partnerData = partnerSnap.data();
+                        document.getElementById('partner-nickname').textContent = partnerData.firstName || partnerData.username;
+                        document.getElementById('partner-avatar').src = `https://placehold.co/128x128/fce7f3/ec4899?text=${(partnerData.firstName || 'P').charAt(0)}`;
+                    }
+                } else {
+                    inviteView.style.display = 'block';
+                    partnerView.style.display = 'none';
                 }
-                const result = await response.json();
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                return text || "Не удалось получить ответ. Попробуйте снова.";
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-                if (retries > 0) {
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    return callGemini(prompt, retries - 1, delay * 2);
+            },
+
+            logout() {
+                if (unsubscribeUser) unsubscribeUser();
+                appContainer.style.display = 'none';
+                loginContainer.style.display = 'flex';
+            },
+
+            async connectPartner() {
+                const partnerIdInput = document.getElementById('partner-id-input');
+                const partnerId = partnerIdInput.value.trim();
+                if (!partnerId || partnerId === userId) {
+                    Telegram.WebApp.showAlert("Введите корректный ID партнёра.");
+                    return;
                 }
-                return "Произошла ошибка при обращении к AI.";
+                const partnerRef = doc(db, "users", partnerId);
+                const partnerSnap = await getDoc(partnerRef);
+                if (!partnerSnap.exists() || partnerSnap.data().partnerId) {
+                    Telegram.WebApp.showAlert("Партнёр не найден или уже состоит в паре.");
+                    return;
+                }
+                const coupleId = [userId, partnerId].sort().join('_');
+                await updateDoc(doc(db, "users", userId), { partnerId: partnerId, coupleId: coupleId });
+                await updateDoc(doc(db, "users", partnerId), { partnerId: userId, coupleId: coupleId });
+                await setDoc(doc(db, "couples", coupleId), { members: [userId, partnerId] });
+                this.closeAllModals();
+                partnerIdInput.value = '';
+            },
+
+            disconnectPartner() {
+                Telegram.WebApp.showConfirm("Вы уверены, что хотите разорвать связь?", async (ok) => {
+                    if (ok) {
+                        const userSnap = await getDoc(doc(db, "users", userId));
+                        const partnerId = userSnap.data()?.partnerId;
+                        if (partnerId) {
+                            await updateDoc(doc(db, "users", userId), { partnerId: null, coupleId: null });
+                            await updateDoc(doc(db, "users", partnerId), { partnerId: null, coupleId: null });
+                        }
+                    }
+                });
+            },
+
+            showInviteModal: () => document.getElementById('invite-modal').classList.remove('modal-hidden'),
+            showConnectModal: () => document.getElementById('connect-modal').classList.remove('modal-hidden'),
+            closeAllModals: () => {
+                document.getElementById('invite-modal').classList.add('modal-hidden');
+                document.getElementById('connect-modal').classList.add('modal-hidden');
+            },
+            copyUserId: () => {
+                navigator.clipboard.writeText(userId).then(() => Telegram.WebApp.showAlert("ID скопирован!"));
+            },
+            sendThinking: () => {
+                const notification = document.getElementById('notification');
+                notification.textContent = '💖 Отправлено!';
+                notification.classList.remove('opacity-0', 'translate-y-[-20px]');
+                notification.classList.add('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    notification.classList.remove('opacity-100', 'translate-y-0');
+                    notification.classList.add('opacity-0', 'translate-y-[-20px]');
+                }, 2000);
+            },
+            
+            async callGemini(prompt) {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+                try {
+                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) throw new Error(`API call failed with status: ${response.status}`);
+                    const result = await response.json();
+                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "Не удалось получить ответ.";
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    return "Произошла ошибка при обращении к AI.";
+                }
+            },
+
+            async generateDateIdea() {
+                const ideaContainer = document.getElementById('date-idea-content');
+                const ideaButton = document.getElementById('date-idea-button');
+                ideaContainer.innerHTML = `<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-800"></div>`;
+                ideaButton.disabled = true;
+                const prompt = "Придумай короткую, креативную и романтическую идею для свидания для пары. Опиши ее в одном абзаце. Отвечай на русском языке.";
+                ideaContainer.textContent = await this.callGemini(prompt);
+                ideaButton.disabled = false;
+            },
+
+            async generateTruthOrDare(type) {
+                const container = document.getElementById('truth-dare-content');
+                const truthBtn = document.getElementById('truth-btn');
+                const dareBtn = document.getElementById('dare-btn');
+                container.innerHTML = `<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent-lavender-dark)]"></div>`;
+                truthBtn.disabled = true;
+                dareBtn.disabled = true;
+                const prompt = type === 'truth'
+                    ? "Придумай интересный и романтичный вопрос 'Правда' для игры влюбленной пары."
+                    : "Придумай веселое и романтичное задание 'Действие' для игры влюбленной пары.";
+                container.textContent = await this.callGemini(prompt);
+                truthBtn.disabled = false;
+                dareBtn.disabled = false;
             }
-        }
-
-        window.generateDateIdea = async function() {
-            const ideaContainer = document.getElementById('date-idea-content');
-            const ideaButton = document.getElementById('date-idea-button');
-            ideaContainer.innerHTML = `<div class="flex justify-center items-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-800"></div></div>`;
-            ideaButton.disabled = true;
-            const prompt = "Придумай короткую, креативную и романтическую идею для свидания для пары. Опиши ее в одном абзаце. Отвечай на русском языке.";
-            ideaContainer.textContent = await callGemini(prompt);
-            ideaButton.disabled = false;
-        }
-
-        window.generateTruthOrDare = async function(type) {
-            const container = document.getElementById('truth-dare-content');
-            const truthBtn = document.getElementById('truth-btn');
-            const dareBtn = document.getElementById('dare-btn');
-            container.innerHTML = `<div class="flex justify-center items-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent-lavender-dark)]"></div></div>`;
-            truthBtn.disabled = true;
-            dareBtn.disabled = true;
-            const prompt = type === 'truth'
-                ? "Придумай интересный и романтичный вопрос 'Правда' для игры влюбленной пары. Вопрос должен быть на русском языке."
-                : "Придумай веселое и романтичное задание 'Действие' для игры влюбленной пары. Задание должно быть на русском языке.";
-            container.textContent = await callGemini(prompt);
-            truthBtn.disabled = false;
-            dareBtn.disabled = false;
-        }
-
+        });
+        
     </script>
 </body>
 </html>
